@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aegis Optimizer | Ultimate PC Optimization Tool</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #000;
+      color: #fff;
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+      cursor: default;
+    }
+
+    /* Mouse Glow Effect */
+    .mouse-glow {
+      position: fixed;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(77,166,255,0.1) 0%, rgba(0,0,0,0) 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease-out;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      filter: blur(15px);
+    }
+
+    body:hover .mouse-glow {
+      opacity: 1;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 40px;
+      background: rgba(20, 20, 30, 0.7); /* Slightly off-black */
+      backdrop-filter: blur(10px); /* Fluid glass effect */
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(77, 166, 255, 0.1); /* Subtle border */
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      /* Replace with your direct Enact icon URL */
+      background: url('https://i.ibb.co/6RL9jb33/enact-logo.png') no-repeat center center;
+      background-size: contain;
+      filter: drop-shadow(0 0 5px rgba(77, 166, 255, 0.5)); /* Subtle glow */
+    }
+
+    .logo-text {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-shadow: 0 0 8px rgba(77, 166, 255, 0.3); /* Soft text glow */
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-link {
+      color: #ddd;
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+      position: relative;
+      padding: 5px 8px; /* Add padding for interaction area */
+      border-radius: 4px; /* Slight rounding */
+    }
+
+    .nav-link:hover {
+      color: #4da6ff;
+      background: rgba(77, 166, 255, 0.1); /* Hover background */
+    }
+
+    .new-tag {
+      background: #007bff;
+      color: white;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 10px;
+      margin-left: 5px;
+      vertical-align: top;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 60px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .floating-icon {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 30px;
+      /* Replace with your direct Aegis icon URL */
+      background: url('https://i.ibb.co/sdLf8LSx/aegis-icon.png') no-repeat center center;
+      background-size: contain;
+      animation: float 3s ease-in-out infinite;
+      filter: drop-shadow(0 0 10px rgba(0, 100, 255, 0.5)); /* Icon glow */
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      margin-bottom: 10px;
+      /* Gradient text effect for fluid appearance */
+      background: linear-gradient(90deg, #ff00cc, #3333ff, #00ccff, #ffcc00, #ff00cc);
+      background-size: 500% 500%; /* Larger gradient area */
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientShift 10s ease infinite; /* Animate the gradient */
+      text-shadow: 0 0 15px rgba(77, 166, 255, 0.3); /* Extra glow */
+    }
+
+    /* Animation for the gradient text */
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: #aaa;
+      margin-bottom: 20px;
+      text-shadow: 0 0 5px rgba(150, 150, 150, 0.2); /* Subtle subtitle glow */
+    }
+
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin: 20px 0;
+      font-size: 0.9rem;
+      color: #bbb;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-top: 30px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid transparent; /* For consistent border handling */
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #007bff, #0056b3); /* Gradient button */
+      color: white;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #0056b3, #00408a); /* Darker gradient on hover */
+      transform: scale(1.03); /* Slight scale on hover */
+      box-shadow: 0 0 15px rgba(0, 119, 255, 0.4); /* Glow on hover */
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: #4da6ff;
+      border: 1px solid #4da6ff;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(77, 166, 255, 0.1);
+      transform: scale(1.03); /* Slight scale on hover */
+      box-shadow: 0 0 10px rgba(77, 166, 255, 0.3); /* Glow on hover */
+    }
+
+    .install-box {
+      background: rgba(30, 30, 40, 0.7); /* Slightly off-black */
+      backdrop-filter: blur(5px); /* Fluid glass effect */
+      padding: 25px;
+      border-radius: 10px;
+      margin: 40px auto;
+      max-width: 600px;
+      text-align: center;
+      border: 1px solid rgba(77, 166, 255, 0.1); /* Subtle border */
+    }
+
+    .install-command {
+      background: #111;
+      padding: 12px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      color: #00ffcc;
+      word-break: break-all;
+      margin: 15px 0;
+      border: 1px solid rgba(0, 255, 204, 0.2); /* Subtle border for command */
+    }
+
+    .features {
+      padding: 60px 20px;
+      text-align: center;
+      background: rgba(10, 10, 20, 0.3); /* Very subtle dark background */
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      color: #4da6ff;
+      margin-bottom: 40px;
+      text-shadow: 0 0 10px rgba(77, 166, 255, 0.3); /* Title glow */
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      background: rgba(30, 30, 40, 0.7); /* Slightly off-black */
+      backdrop-filter: blur(5px); /* Fluid glass effect */
+      padding: 25px;
+      border-radius: 10px;
+      text-align: left;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: 1px solid rgba(77, 166, 255, 0.1); /* Subtle border */
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), 0 0 15px rgba(77, 166, 255, 0.2); /* Depth and glow on hover */
+    }
+
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 15px;
+      color: #4da6ff;
+    }
+
+    .feature-title {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
+    .feature-desc {
+      color: #ccc;
+      font-size: 0.95rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #777;
+      font-size: 0.85rem;
+      margin-top: 50px;
+      border-top: 1px solid #333;
+    }
+
+    /* Biver Popup Overlay */
+    .biver-popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.95);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    .biver-content {
+      background: rgba(20,20,30,0.9); /* Slightly off-black */
+      backdrop-filter: blur(10px); /* Fluid glass effect */
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 600px;
+      text-align: center;
+      border: 1px solid rgba(77,166, 255, 0.3);
+    }
+
+    .biver-content h2 {
+      color: #4da6ff;
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    .biver-content p {
+      color: #ddd;
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .biver-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 2rem;
+      color: #aaa;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .biver-close:hover {
+      color: #4da6ff;
+    }
+
+    /* Download Popup */
+    .download-popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      z-index: 2001;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .download-content {
+      background: rgba(20,20,30,0.95);
+      backdrop-filter: blur(10px);
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 500px;
+      text-align: center;
+      border: 1px solid rgba(77, 166, 255, 0.3);
+    }
+
+    .download-content h2 {
+      color: #4da6ff;
+      margin-bottom: 15px;
+    }
+
+    .download-content p {
+      color: #ddd;
+      margin-bottom: 20px;
+    }
+
+    .download-close {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .download-close:hover {
+      background: #0056b3;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 10px 20px;
+      }
+      .nav-links {
+        gap: 10px;
+        font-size: 12px;
+      }
+      h1 {
+        font-size: 2.5rem;
+      }
+      .btn-group {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Mouse Glow -->
+  <div class="mouse-glow"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo-container">
+      <div class="logo-img"></div>
+      <span class="logo-text">Enact</span>
+    </div>
+    <div class="nav-links">
+      <a href="#" class="nav-link">Home</a>
+      <a href="#" class="nav-link" onclick="window.open('docs.html', '_blank'); return false;">View Docs</a>
+      <a href="mailto:enacthelp@outlook.com" class="nav-link">Support</a>
+      <a href="#" class="nav-link" onclick="showBiverPopup(); return false;">Biver <span class="new-tag">NEW</span></a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="floating-icon"></div>
+    <h1>Aegis Optimizer</h1>
+    <p class="subtitle">The ultimate tool to optimize Windows and boost system performance</p>
+    <div class="stats">
+      <span>Latest Version: 2.11.0</span>
+      <span>Total Downloads: 116,542</span>
+    </div>
+    <div class="btn-group">
+      <a href="#" class="btn btn-primary" onclick="showDownloadPopup(); return false;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M8 1a2 2 0 0 0-2 2v10.5a.5.5 0 0 0 .74.439c1.37.417 2.64.935 3.6 1.47a.5.5 0 0 0 .74-.439V3a2 2 0 0 0-2-2zm0 1a1 1 0 0 1 1 1v10.5a.5.5 0 0 1-.74.439c-1.37-.417-2.64-.935-3.6-1.47a.5.5 0 0 1-.74-.439V3a1 1 0 0 1 1-1z"/>
+        </svg>
+        Download
+      </a>
+      <a href="#" class="btn btn-secondary" onclick="window.open('docs.html', '_blank'); return false;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.5.09 1.01.09 1.51 0C9.71 14.53 12 11.54 12 8c0-3.58-3.58-7-7-7zm1 3H7v2h2V3zm0 4H7v6h2V7z"/>
+        </svg>
+        View Docs
+      </a>
+    </div>
+  </section>
+
+  <!-- Install Box -->
+  <div class="install-box">
+    <h3>Quick Install via PowerShell:</h3>
+    <div class="install-command">
+      irm https://getaegis.net/get | iex
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <section class="features">
+    <h2 class="section-title">Features</h2>
+    <p style="color: #aaa; margin-bottom: 40px;">Powerful optimizations to enhance your Windows experience</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">⚙️</div>
+        <h3 class="feature-title">Debloat Windows</h3>
+        <p class="feature-desc">Removes unnecessary Windows features and apps such as Copilot, Xbox, OneDrive, etc.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3 class="feature-title">System Optimization</h3>
+        <p class="feature-desc">Enhance system performance and responsiveness with Aegis’s powerful tweaks.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🗑️</div>
+        <h3 class="feature-title">Clear Temporary Files</h3>
+        <p class="feature-desc">Remove temporary files, caches, and logs to free up space and improve speed.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">✅</div>
+        <h3 class="feature-title">Safe & Reversible</h3>
+        <p class="feature-desc">All changes can be undone with restore points, disabling the tweak, or changing system settings.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>Made with ❤️ by Enact — Under the umbrella of Enact Software Group</p>
+    <p>Based on Sparkle by Parcoil — Licensed under GPL-3.0</p>
+  </footer>
+
+  <!-- Biver Popup -->
+  <div id="biverPopup" class="biver-popup">
+    <div class="biver-content">
+      <div class="biver-close" onclick="hideBiverPopup()">×</div>
+      <h2>🚀 Biver — Coming Soon</h2>
+      <p>Biver is our next-generation gaming utility — featuring a massive library of customizable crosshair designs for every FPS game. Whether you're playing Valorant, CS2, Call of Duty, or Apex Legends — Biver lets you import, export, and fine-tune your perfect crosshair. Stay tuned for beta access!</p>
+      <a href="#" class="btn btn-primary" style="margin-top: 20px;">
+        Join Waitlist
+      </a>
+    </div>
+  </div>
+
+  <!-- Download Popup -->
+  <div id="downloadPopup" class="download-popup">
+    <div class="download-content">
+      <h2>Download Status</h2>
+      <p>It is under development. Soon download link with step by step guide will be provided.</p>
+      <button class="download-close" onclick="hideDownloadPopup()">Close</button>
+    </div>
+  </div>
+
+  <script>
+    // Mouse Glow Effect
+    document.addEventListener('mousemove', function(e) {
+      const glow = document.querySelector('.mouse-glow');
+      glow.style.left = e.clientX + 'px';
+      glow.style.top = e.clientY + 'px';
+    });
+
+    // Biver Popup Functions
+    function showBiverPopup() {
+      document.getElementById('biverPopup').style.display = 'flex';
+    }
+
+    function hideBiverPopup() {
+      document.getElementById('biverPopup').style.display = 'none';
+    }
+
+    // Download Popup Functions
+    function showDownloadPopup() {
+        document.getElementById('downloadPopup').style.display = 'flex';
+    }
+
+    function hideDownloadPopup() {
+        document.getElementById('downloadPopup').style.display = 'none';
+    }
+  </script>
+
+</body>
+</html>
